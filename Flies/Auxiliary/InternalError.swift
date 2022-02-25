@@ -18,7 +18,7 @@ public enum InternalError: Error {
     /// An error caused when you try to vibrate to a Service that is mapped as a Flow
     case flyIsNotService
     ///
-    case invalidParameters
+    case invalidParameters(origin: Error)
     ///
     case invalidStateForStartRegister
     ///
@@ -33,4 +33,27 @@ public enum InternalError: Error {
     case callingMissingDependency
     
     case singletonIsBusy
+}
+
+extension InternalError: Equatable {
+    
+    public static func == (lhs: InternalError, rhs: InternalError) -> Bool {
+        switch (lhs, rhs) {
+        case (.invalidParameters(_), .invalidParameters(_)),
+            (.duplicatedFly, .duplicatedFly),
+            (.flyNotFound, .flyNotFound),
+            (.flyIsNotFlow, .flyIsNotFlow),
+            (.flyIsNotService, .flyIsNotService),
+            (.invalidStateForStartRegister, .invalidStateForStartRegister),
+            (.invalidStateForFinishRegister, .invalidStateForFinishRegister),
+            (.registerWithoutStart, .registerWithoutStart),
+            (.missingDependencies, .missingDependencies),
+            (.parserError, .parserError),
+            (.callingMissingDependency, .callingMissingDependency),
+            (.singletonIsBusy, .singletonIsBusy):
+            return true
+        default: return false
+        }
+    }
+    
 }

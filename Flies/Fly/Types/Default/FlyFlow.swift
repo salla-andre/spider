@@ -8,19 +8,19 @@
 
 import Foundation
 
-public protocol FlyFlow: FlyBaseFlow, FlyInputable, FlyFinishable, FlyValidable where Self.Input == [String: Any], Self.Output == [String: Any], Self.Input == Self.Parameter {
+public protocol FlyFlow: FlyBaseFlow, FlyInputable, FlyFinishable, FlyValidable where Self.Input == [String: Any], Self.Output == [String: Any], Self.Parameter == Self.Input {
 }
 
-extension FlyFlow {
-    public func toInput(from dictionary: BaseType?) throws -> Input? {
+public extension FlyFlow {
+    func toInput(from dictionary: BaseType?) throws -> Input? {
         return dictionary
     }
     
-    public func toDictionary(from output: Output?) throws -> BaseType? {
+    func toDictionary(from output: Output?) throws -> BaseType? {
         return output
     }
     
-    public func validate(parameters: Parameter?) -> Bool {
-        return true
+    func validate(parameters: Parameter?) throws {
+        //Default - does nothing
     }
 }

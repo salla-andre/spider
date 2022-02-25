@@ -52,50 +52,10 @@ internal class VibrationForFly: Vibration {
         guard let fly = fly else { return false }
         return type(of: fly).dependencies.map {
             switch $0 {
-            case .required(let path, let version): return path
-            case .optional(let path, let version): return path
+            case .required(let path): return path
+            case .optional(let path): return path
             }
         }.contains(dependency)
-    }
-    
-    private func checkVersion(current: String, needed: String? = nil) -> Bool {
-        guard let needed = needed else {
-            return true
-        }
-        
-        var neededComposed = needed.split(separator: ".")
-        var currentComposed = current.split(separator: ".")
-        
-        var isCompatible = true
-        var compareFactor = "="
-        
-        if let firstPartNeeded = neededComposed.first,
-           let majorCurrent = currentComposed.first {
-            compareFactor = firstPartNeeded.filter{ $0.isMathSymbol }
-            let majorNeeded = firstPartNeeded.filter{ !$0.isMathSymbol }
-            isCompatible = isCompatible && (majorNeeded != "") && (majorNeeded == majorCurrent)
-        }
-        
-        if neededComposed.count > 1 {
-            let minorNeeded = String(neededComposed[1])
-            let minorCurrent = currentComposed.count > 1 ? currentComposed[1] : "0"
-            isCompatible = isCompatible && compare(left: minorNeeded, right: minorCurrent, factor: compareFactor)
-        }
-        
-    }
-    
-    private func compare(left: String, right: String, factor: String) -> Bool {
-        guard let numberLeft = Int(left), let numberRight = Int(right) else {
-            return false
-        }
-        switch factor {
-        case "=": return numberLeft == numberRight
-        case ">": return numberLeft > numberRight
-        case "<": return numberLeft < numberRight
-        case ">=": return numberLeft >= numberRight
-        case "<=": return numberLeft <= numberRight
-        default: return false
-        }
     }
     
     func flow<T: Codable, U: Codable>(signal: String,

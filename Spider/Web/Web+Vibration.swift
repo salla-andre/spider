@@ -10,6 +10,12 @@ import Foundation
 import Flies
 import UIKit
 
+extension FlyBaseFlow where Self: FlyValidable {
+    func validate() {
+        try? self.validate(parameters: nil)
+    }
+}
+
 extension Web: Vibration {
     
     func isAvailable(signal: FlyBase.Path) -> Bool {
@@ -24,6 +30,9 @@ extension Web: Vibration {
         let fly = try getAndCreate(with: signal)
         if let flow = fly as? FlyBaseFlow {
             try checkState(singleton: flow as? FlySingleton)
+            if let validable = flow as? FlyBaseValidable {
+                try validable.validation(with: parameters)
+            }
             let capsule = self.attach(fly: flow, callback: completion)
             flow.completion = capsule.callback
             self.flowFly(to: try flow.start(with: parameters),
@@ -44,6 +53,9 @@ extension Web: Vibration {
         if let flow = fly as? FlyBaseFlow {
             try checkState(singleton: flow as? FlySingleton)
             let dictionary = try CodableUtils.toDictionary(codable: parameters)
+            if let validable = flow as? FlyBaseValidable {
+                try validable.validation(with: dictionary)
+            }
             let callback = self.makeCallback(completion)
             let capsule = self.attach(fly: flow, callback: callback)
             flow.completion = capsule.callback
@@ -63,6 +75,9 @@ extension Web: Vibration {
         let fly = try getAndCreate(with: signal)
         if let service = fly as? FlyBaseService {
             try checkState(singleton: service as? FlySingleton)
+            if let validable = service as? FlyBaseValidable {
+                try validable.validation(with: parameters)
+            }
             let capsule = self.attach(fly: service, callback: completion)
             service.completion = capsule.callback
             try service.start(with: parameters)
@@ -79,6 +94,9 @@ extension Web: Vibration {
         if let service = fly as? FlyBaseService {
             try checkState(singleton: service as? FlySingleton)
             let dictionary = try CodableUtils.toDictionary(codable: parameters)
+            if let validable = service as? FlyBaseValidable {
+                try validable.validation(with: dictionary)
+            }
             let callback = self.makeCallback(completion)
             let capsule = self.attach(fly: service, callback: callback)
             service.completion = capsule.callback

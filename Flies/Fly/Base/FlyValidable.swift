@@ -8,18 +8,28 @@
 
 import Foundation
 
-public protocol FlyValidable {
+public protocol FlyBaseValidable {
+    func validation(with parameters: BaseType?) throws
+}
+
+public protocol FlyValidable: FlyBaseValidable {
     
     associatedtype Parameter
     
-    func validate(parameters: Parameter?) -> Bool
+    func validate(parameters: Parameter?) throws
     
 }
 
 public extension FlyTypes where Self: FlyValidable {
     
-    func validate(parameters: Parameter?) -> Bool {
-        return true
+    func validate(parameters: Parameter?) throws {
+        //Default - does nothing
     }
     
+}
+
+public extension FlyBaseValidable where Self: FlyValidable, Self: FlyInputable, Self.Parameter == Self.Input {
+    func validation(with parameters: BaseType?) throws {
+        try self.validate(parameters: toInput(from: parameters))
+    }
 }

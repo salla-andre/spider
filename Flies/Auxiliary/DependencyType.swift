@@ -9,6 +9,6 @@
 import Foundation
 
 public enum DependencyType {
-    case required(FlyBase.Path, version: String?)
-    case optional(FlyBase.Path, version: String?)
+    case required(FlyBase.Path)
+    case optional(FlyBase.Path)
 }

@@ -20,8 +20,8 @@ public extension FlyService {
         return output
     }
     
-    func validate(parameters: Input?) -> Bool {
-        return true
+    func validate(parameters: Parameter?) throws {
+        //Default - does nothing
     }
     
 }

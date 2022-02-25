@@ -63,7 +63,7 @@ class FlyFinishableTests: XCTestCase {
             XCTAssertNotNil(result)
             if case let .failure(error) = result {
                 XCTAssertNotNil(error)
-                XCTAssertEqual(error as? InternalError, .invalidParameters)
+                XCTAssertEqual(error as? InternalError, .invalidParameters(origin: NSError.init(domain: "", code: 1, userInfo: nil)))
             } else {
                 XCTFail("Unexpected result")
             }
@@ -71,7 +71,7 @@ class FlyFinishableTests: XCTestCase {
         try SpiderMain.vibration.service(signal: FlyFinishableTestModel.path,
                                          parameters: nil as EncodableTestModel?,
                                          completion: callback)
-        fly.finish(resulting: .failure(InternalError.invalidParameters))
+        fly.finish(resulting: .failure(InternalError.invalidParameters(origin: NSError.init(domain: "", code: 1, userInfo: nil))))
     }
     
     func failureCaseFromDecoding(with fly: FlyFinishableTestModel) throws {
